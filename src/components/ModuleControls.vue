@@ -1,0 +1,177 @@
+<template>
+  <div class="d-flex flex-column align-start justify-space-between fill-height max-h-100 ml-2">
+    <div class="d-flex flex-row justify-center align-baseline">
+      <v-text-field :clearable="true" :clear-icon="icons.mdiClose" :value="txtModule" @click:clear="fetchModuleResult=[]"
+                    @input="txtModuleChange($event)" label="Enter Module Code here!" />
+      <v-btn class="ml-2">Plan!</v-btn>
+    </div>
+    <div class="flex align-start d-flex flex-column overflow-auto">
+      <h2 v-if="!hasResult">{{ helperText }}</h2>
+      <v-btn v-for="(mod, index) in fetchModuleResult" @click="onModuleAdd(mod)"
+             :key="'fetchModuleResult[]+'+index" class="text-no-wrap mt-1">
+        <v-icon class="mr-2">{{ icons.mdiPlus }}</v-icon>
+        <span>{{ mod.code }} {{mod.name}}</span>
+      </v-btn>
+    </div>
+    <h3>Selected Modules:</h3>
+    <div class="flex d-flex flex-column align-start overflow-auto">
+      <v-btn v-for="(mod, index) in selectedModules" class="mt-1" @click="onModuleDelete(mod.code)"
+             :key="'selectedModules[]+'+index + mod.code">
+        <v-icon class="mr-2">{{ icons.mdiMinus }}</v-icon>
+        <span>{{ mod.code }} {{mod.name}}</span>
+      </v-btn>
+    </div>
+  </div>
+</template>
+<script>
+import Vue from 'vue';
+import $ from 'jquery';
+import { mdiPlus, mdiMinus, mdiClose } from '@mdi/js';
+export default {
+  name: 'ModuleControls',
+  data: () => ({
+    icons: { mdiPlus, mdiMinus, mdiClose },
+    txtModule: 'CZ1',
+    fetchModulePromise: null,
+    fetchModuleResult: [],
+    selectedModules: {}
+  }),
+  methods: {
+    parseModName (table) {
+      const strongArr = $(table).find('b font');
+      if (strongArr.length < 3) return undefined;
+      return {
+        code: strongArr[0].innerText.trim(),
+        name: strongArr[1].innerText.trim(),
+        AU: parseFloat(strongArr[2].innerText.trim().split(' ')[0])
+      };
+    },
+    parseModIndexes (table) {
+      const rows = $(table).find('tr');
+      let currentModIndex;
+      const indexes = {};
+      for (let i = 0; i < rows.length; i++) {
+        const row = $(rows[i]);
+        const cols = $(row).find('td');
+        if (cols.length !== 7) continue; // Skip Header
+        const modIndex = this.parseModIndex(cols[0]);
+        if (modIndex !== undefined) currentModIndex = modIndex;
+        const modLesson = {
+          type: cols[1].innerText,
+          group: cols[2].innerText,
+          day: cols[3].innerText,
+          time: this.parseLessonTime(cols[4].innerText),
+          venue: cols[5].innerText,
+          remarks: cols[6].innerText,
+          remarkType: this.parseRemarks(cols[6].innerText)
+        };
+        if (currentModIndex !== undefined) {
+          if (indexes[currentModIndex] === undefined) { indexes[currentModIndex] = []; }
+          indexes[currentModIndex].push(modLesson);
+        }
+      }
+      return indexes;
+    },
+    parseModIndex (col) {
+      const test = $(col).find('b');
+      if (
+        test.length === 0 ||
+        test[0].innerText === undefined ||
+        (test[0].innerText !== undefined && test[0].innerText.length === 0)
+      ) return;
+      return test[0].innerText;
+    },
+    parseRemarks (remark) {
+      if (remark.indexOf('Teaching Wk1,3') !== -1) return 1;
+      if (remark.indexOf('Teaching Wk2,4') !== -1) return 2;
+      return 0;
+    },
+    parseLessonTime (time) {
+      const times = time.split('-');
+      if (times.length !== 2) return;
+      return {
+        start: times[0],
+        end: times[1]
+      };
+    },
+    getModules () {
+      const formData = {
+        STAFF_ACCESS: false,
+        ACADSEM: '2020;1',
+        boption: 'Search',
+        r_search_type: 'F',
+        r_subj_code: this.txtModule
+      };
+      const url1 = 'https://cors-anywhere.herokuapp.com/';
+      const url = url1 + ('https://wish.wis.ntu.edu.sg/webexe/owa/AUS_SCHEDULE.main_display1');
+      if (this.fetchModulePromise != null) {
+        this.fetchModulePromise.abort();
+        this.fetchModulePromise = null;
+      }
+      this.fetchModuleResult = [];
+      this.fetchModulePromise = $.ajax({
+        method: 'POST',
+        url: url,
+        data: formData
+      });
+      this.fetchModulePromise.then((successData) => {
+        const data = $(successData);
+        const tables = $(data).find('table');
+        const fetchModuleResult = [];
+        for (let i = 0; i < tables.length; i += 2) {
+          // parse mod name;
+          const modInfo = this.parseModName($(tables[i]));
+          modInfo.indexes = this.parseModIndexes($(tables[i + 1]));
+          fetchModuleResult.push(modInfo);
+        }
+        this.fetchModuleResult = fetchModuleResult;
+      });
+      this.fetchModulePromise.catch(() => {});
+      this.fetchModulePromise.always(() => {
+        this.fetchModulePromise = null;
+      });
+    },
+    txtModuleChange (newText) {
+      this.txtModule = newText == null ? '' : newText;
+      if (this.txtModule.length > 0) this.getModules();
+      else this.fetchModuleResult = [];
+    },
+    onModuleAdd (module) {
+      if (this.selectedModules[module.code] === undefined) {
+        Vue.set(this.selectedModules, module.code, module);
+        this.$emit('onAdd', module);
+        this.$emit('input', this.selectedModules);
+        this.$emit('change', this.selectedModules);
+      }
+    },
+    onModuleDelete (moduleCode) {
+      if (this.selectedModules[moduleCode] === undefined) return;
+      Vue.delete(this.selectedModules, moduleCode);
+      this.$emit('onDelete', this.selectedModules[moduleCode]);
+      this.$emit('input', this.selectedModules);
+      this.$emit('change', this.selectedModules);
+    }
+  },
+  computed: {
+    hasResult () {
+      return this.fetchModuleResult.length > 0;
+    },
+    helperText () {
+      if (this.txtModule.length === 0) { return 'Start by entering a course code!'; }
+      if (this.fetchModulePromise === null) { return 'No Modules found!'; }
+      return 'Searching NTU database... Please wait';
+    }
+  }
+};
+</script>
+<style scoped>
+.max-w-100{
+  max-width: 100%;
+}
+.max-h-100{
+  max-height: 100%;
+}
+.max-h-32{
+  max-height: 30vh;
+}
+</style>
