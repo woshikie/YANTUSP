@@ -1,4 +1,4 @@
-name: Vue Actions Deploy
+name: YANTUSP
 on: [push]
 jobs:
   build-and-deploy:
