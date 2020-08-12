@@ -16,7 +16,6 @@ import { mdiArrowLeft, mdiArrowRight } from '@mdi/js';
 export default {
   name: 'TimeTablePicker',
   components: { TimeTableViewer },
-
   props: {
     value: { // This is my selected module
       type: Object,
@@ -28,6 +27,11 @@ export default {
       planIndex: 0,
       icons: { mdiArrowRight, mdiArrowLeft }
     };
+  },
+  watch: {
+    selectedPlan () {
+      this.$emit('change', this.selectedPlan);
+    }
   },
   computed: {
     selectedModule: {

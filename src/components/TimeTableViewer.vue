@@ -68,7 +68,7 @@ export default {
         for (const hit in moduleHits) {
           const test = moduleHits[hit];
           if (test.isStart) {
-            content += `${test.modCode}, ${test.timeslot.type}`;
+            content += `(${test.modCode}, ${test.timeslot.type})`;
             rowSpan = test.colSpan;
             retObj = new TimeTableViewerCell({
               content: content,

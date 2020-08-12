@@ -1,9 +1,8 @@
 <template>
   <div class="d-flex flex-column align-start justify-start fill-height max-h-100 ml-2">
-    <div class="d-flex flex-row justify-center align-baseline">
+    <div class="d-flex flex-row justify-center align-baseline w-100">
       <v-text-field :clearable="true" :clear-icon="icons.mdiClose" :value="txtModule" @click:clear="fetchModuleResult=[]"
                     @input="txtModuleChange($event)" label="Enter Module Code here!" />
-      <v-btn class="ml-2">Plan!</v-btn>
     </div>
     <div class="align-start d-flex flex-column overflow-auto max-w-100">
       <h2 v-if="!hasResult">{{ helperText }}</h2>
@@ -25,6 +24,24 @@
         <span>{{ mod.code }} {{mod.name}}</span>
       </v-btn>
     </div>
+    <div class="w-100 mt-2">
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th>Module Code</th>
+              <th>Index</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(mod, index) in currentPlannedMods" :key="uid + '-mini-table-' + index">
+              <td>{{ mod.code }}</td>
+              <td>{{ mod.index }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </div>
   </div>
 </template>
 <script>
@@ -35,9 +52,15 @@ import ModuleIndexLesson from '@/classes/ModuleIndexLesson';
 import Module from '@/classes/Module';
 export default {
   name: 'ModuleControls',
+  props: {
+    currentPlannedMods: {
+      type: Array,
+      default () { return []; }
+    }
+  },
   data: () => ({
     icons: { mdiPlus, mdiMinus, mdiClose },
-    txtModule: 'CZ1',
+    txtModule: '',
     fetchModulePromise: null,
     fetchModuleResult: [],
     selectedModules: {}
@@ -171,6 +194,9 @@ export default {
     },
     hasNoModulesSelected () {
       return Object.keys(this.selectedModules).length === 0;
+    },
+    uid () {
+      return this._uid;
     }
   }
 };

@@ -7,10 +7,10 @@
       <v-container class="fill-height" fluid >
         <v-row align="center" class="fill-height d-flex flex-row justify-space-between">
           <v-col cols="12" sm="3" class="fill-height">
-            <ModuleControls v-model="selectedModules"/>
+            <ModuleControls v-model="selectedModules" :current-planned-mods="currentPlan"/>
           </v-col>
           <v-col cols="12" sm="9" class="">
-            <TimeTablePicker v-model="selectedModules" />
+            <TimeTablePicker v-model="selectedModules" @change="onPlanChange" />
           </v-col>
         </v-row>
       </v-container>
@@ -29,11 +29,17 @@ export default {
   components: { TimeTablePicker, ModuleControls },
   data () {
     return {
-      selectedModules: undefined
+      selectedModules: undefined,
+      currentPlan: undefined
     };
   },
   created () {
     this.$vuetify.theme.dark = true;
+  },
+  methods: {
+    onPlanChange (newPlan) {
+      this.currentPlan = newPlan;
+    }
   }
 };
 </script>
