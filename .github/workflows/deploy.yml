@@ -19,7 +19,7 @@ jobs:
           npm install
           npm run build
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@3.5
+        uses: JamesIves/github-pages-deploy-action@latest
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BASE_BRANCH: master
