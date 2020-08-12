@@ -5,7 +5,7 @@
                     @input="txtModuleChange($event)" label="Enter Module Code here!" />
       <v-btn class="ml-2">Plan!</v-btn>
     </div>
-    <div class="align-start d-flex flex-column overflow-auto">
+    <div class="align-start d-flex flex-column overflow-auto max-w-100">
       <h2 v-if="!hasResult">{{ helperText }}</h2>
       <v-btn v-for="(mod, index) in fetchModuleResult" @click="onModuleAdd(mod)"
              :key="'fetchModuleResult[]+'+index" class="text-no-wrap mt-1">
@@ -18,7 +18,7 @@
       <v-btn @click="onClearAllModule">Clear All</v-btn>
     </div>
     <h4 v-if="hasNoModulesSelected">No Modules Selected!</h4>
-    <div class="d-flex flex-column align-start overflow-auto">
+    <div class="d-flex flex-column align-start overflow-auto max-w-100">
       <v-btn v-for="(mod, index) in selectedModules" class="mt-1" @click="onModuleDelete(mod.code)"
              :key="'selectedModules[]+'+index + mod.code">
         <v-icon class="mr-2">{{ icons.mdiMinus }}</v-icon>
