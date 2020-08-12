@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/vue-actions-deploy/precache-manifest.99aaa11f7336bff1fc7cceb1a2ed7e5a.js"
+  "/vue-actions-deploy/precache-manifest.b44acc54fcb50759b5fb137927b07770.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "yantusp"});
