@@ -1,23 +1,33 @@
 <template>
   <v-container fluid class="d-flex align-center flex-column fill-height">
-    <h1>Plan {{ selectedIndex }} out of {{ plans.length }}</h1>
+    <v-row no-gutters class="d-flex justify-space-around align-center col-12">
+      <v-btn :disabled="isLeftBtnDisabled" @click="planIndex--;"><v-icon>{{ icons.mdiArrowLeft }}</v-icon></v-btn>
+      <h1>Plan {{ selectedIndex }} out of {{ plans.length }}</h1>
+      <v-btn :disabled="isRightBtnDisabled" @click="planIndex++;"><v-icon>{{ icons.mdiArrowRight }}</v-icon></v-btn>
+    </v-row>
+
     <TimeTableViewer :value="selectedPlan" class="flex d-flex" />
   </v-container>
 
 </template>
 <script>
 import TimeTableViewer from '@/components/TimeTableViewer';
-
+import { mdiArrowLeft, mdiArrowRight } from '@mdi/js';
 export default {
   name: 'TimeTablePicker',
   components: { TimeTableViewer },
+
   props: {
     value: { // This is my selected module
       type: Object,
       default () { return {}; }
     }
   },
-  mounted () {
+  data () {
+    return {
+      planIndex: 0,
+      icons: { mdiArrowRight, mdiArrowLeft }
+    };
   },
   computed: {
     selectedModule: {
@@ -37,13 +47,15 @@ export default {
     selectedIndex () {
       if (this.plans.length === 0) return 0;
       return this.planIndex + 1;
+    },
+    isLeftBtnDisabled () {
+      return this.planIndex === 0;
+    },
+    isRightBtnDisabled () {
+      return (this.planIndex + 1 >= this.plans.length);
     }
   },
-  data () {
-    return {
-      planIndex: 0
-    };
-  },
+
   methods: {
     generatePlans () {
       if (this.selectedModule === undefined) return;

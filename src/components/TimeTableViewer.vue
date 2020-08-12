@@ -1,16 +1,30 @@
 <template>
   <v-container fluid >
-    <div class="flex text-center">
-      <div v-for="row_i in 30" :key="makeKeyRow(row_i)" class="d-flex flex-row">
-        <v-col v-for="col_i in 7" :key="makeKeyCol(col_i)"
-               :class="shouldRender(col_i, row_i)">
-          {{ getContent(col_i, row_i) }}
-        </v-col>
-      </div>
-    </div>
+    <v-simple-table dense class="flex">
+      <template v-slot:default>
+        <thead>
+        <tr>
+          <th class="text-center" v-for="index in 7" :key="'ttv-header-'+index">{{ getHeaders(index) }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="row_i in 30" :key="'ttv-row-'+row_i">
+          <td v-for="(cell, col_i) in getCols(row_i)" :rowspan="cell.rowSpan"
+              :key="'ttv-row'+row_i+'-col-'+col_i" >
+            {{ cell.content }}
+          </td>
+        </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+<!--    <div class="flex text-center d-flex">-->
+<!--      <span>{{ getContent(col_i, row_i) }}</span>-->
+<!--    </div>-->
   </v-container>
 </template>
 <script>
+import TimeTableViewerCell from '@/classes/TimeTableViewerCell';
+
 export default {
   name: 'TimeTableViewer',
   props: {
@@ -28,31 +42,45 @@ export default {
     }
   },
   methods: {
-    makeKeyCol (index) {
-      return this.uid + 'col_i' + index;
-    },
-    makeKeyRow (index) {
-      return this.uid + 'row_i' + index;
-    },
-    shouldRender (x, y) {
-      const base = ['d-flex', 'flex-column', 'flex', 'timetable-cell'];
-      // base.push('hidden');
-      return base;
+    getCols (y) {
+      const cols = [];
+      for (let x = 1; x <= 7; x++) {
+        const content = this.getContent(x, y);
+        if (content !== undefined) {
+          cols.push(content);
+        }
+      }
+      return cols;
     },
     getContent (x, y) {
-      if (y === 1) return this.getHeaders(x);
-      if (x === 1) return this.getHours(y);
+      // if (y === 1) return this.getHeaders(x);
+      if (x === 1) {
+        return new TimeTableViewerCell({
+          content: this.getHours(y)
+        });
+      }
       // return `(${x}, ${y})`;
       const moduleHits = this.getModule(x, y);
+      let retObj;
       if (moduleHits.length > 0) {
-        let ret = '';
+        let content = '';
+        let rowSpan = 1;
         for (const hit in moduleHits) {
           const test = moduleHits[hit];
-          ret += `${test.modCode}, ${test.timeslot.type}`;
+          if (test.isStart) {
+            content += `${test.modCode}, ${test.timeslot.type}`;
+            rowSpan = test.colSpan;
+            retObj = new TimeTableViewerCell({
+              content: content,
+              rowSpan: rowSpan
+            });
+          }
         }
-        return ret;
+      } else {
+        retObj = new TimeTableViewerCell();
       }
-      return '';
+      // return `(${x}, ${y})`;
+      return retObj;
     },
     getModule (x, y) {
       const currentHourStart = this.getHourStart(y);
@@ -65,17 +93,22 @@ export default {
           const timeslot = mod.timings[j];
           if (
             timeslot.day === currentDay &&
-            currentHourStart >= timeslot.time.start &&
-            currentHourEnd <= timeslot.time.end
+            currentHourStart >= timeslot.time.start && currentHourEnd <= timeslot.time.end
           ) {
             ret.push({
               modCode: mod.code,
-              timeslot: timeslot
+              timeslot: timeslot,
+              isStart: currentHourStart === timeslot.time.start,
+              colSpan: this.getColSpan(timeslot.time.start, timeslot.time.end)
             });
           }
         }
       }
       return ret;
+    },
+    getColSpan (hourStart, hourEnd) {
+      const duration = hourEnd - hourStart;
+      return Math.floor(duration / 100) * 2 + (((duration % 100) !== 0) ? 1 : 0);
     },
     getHeaders (x) {
       switch (x) {
@@ -108,13 +141,10 @@ export default {
       return this.fixHour(start + offset);
     },
     getHourOffset: function (y) {
-      const realY = (y - 2);
+      const realY = (y - 1);
       // if (realY === 0) return 0;
       const minutes = realY * 30;
       return (Math.floor(minutes / 60) * 100) + (minutes % 60);
-    },
-    getHourEnd (y) {
-      return this.fixHour(this.getHourStart(y) + 30);
     },
     fixHour (hour) {
       const offset = hour % 100;
@@ -137,15 +167,20 @@ export default {
 };
 </script>
 <style scoped>
+.timetable-col{
+  border: 1px solid white;
+}
 .timetable-cell{
   border-bottom: 1px solid white;
   border-top: 1px solid white;
-  border-left: 1px solid white;
+  ;
 }
 .timetable-cell:last-child{
   border-right: 1px solid white;
 }
-.hidden{
-  display: none !important;
+
+/deep/ .v-data-table td {
+  border-left: thin solid rgba(255, 255, 255, 0.12);
+  border-right: thin solid rgba(255, 255, 255, 0.12);
 }
 </style>
