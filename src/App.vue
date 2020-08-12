@@ -5,11 +5,11 @@
     </v-app-bar>
     <v-main>
       <v-container class="fill-height" fluid >
-        <v-row align="center" justify="center" class="fill-height">
-          <v-col cols="12" sm="6" md="4" class="fill-height">
+        <v-row align="center" class="fill-height justify-space-between">
+          <v-col cols="12" sm="6" md="auto" class="fill-height flex">
             <ModuleControls v-model="selectedModules"/>
           </v-col>
-          <v-col cols="12" sm="6" md="8" class="fill-height">
+          <v-col cols="12" sm="6" md="auto" class="fill-height flex-fill">
             <TimeTablePicker v-model="selectedModules" />
           </v-col>
         </v-row>

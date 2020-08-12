@@ -14,8 +14,8 @@ export default {
   name: 'TimeTableViewer',
   props: {
     value: {
-      type: undefined,
-      default: {}
+      type: Object,
+      default () { return {}; }
     }
   },
   computed: {

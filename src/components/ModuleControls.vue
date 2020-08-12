@@ -1,11 +1,11 @@
 <template>
-  <div class="d-flex flex-column align-start justify-space-between fill-height max-h-100 ml-2">
+  <div class="d-flex flex-column align-start justify-start fill-height max-h-100 ml-2">
     <div class="d-flex flex-row justify-center align-baseline">
       <v-text-field :clearable="true" :clear-icon="icons.mdiClose" :value="txtModule" @click:clear="fetchModuleResult=[]"
                     @input="txtModuleChange($event)" label="Enter Module Code here!" />
       <v-btn class="ml-2">Plan!</v-btn>
     </div>
-    <div class="flex align-start d-flex flex-column overflow-auto">
+    <div class="align-start d-flex flex-column overflow-auto">
       <h2 v-if="!hasResult">{{ helperText }}</h2>
       <v-btn v-for="(mod, index) in fetchModuleResult" @click="onModuleAdd(mod)"
              :key="'fetchModuleResult[]+'+index" class="text-no-wrap mt-1">
@@ -14,7 +14,8 @@
       </v-btn>
     </div>
     <h3>Selected Modules:</h3>
-    <div class="flex d-flex flex-column align-start overflow-auto">
+    <h4 v-if="hasNoModulesSelected">No Modules Selected!</h4>
+    <div class="d-flex flex-column align-start overflow-auto">
       <v-btn v-for="(mod, index) in selectedModules" class="mt-1" @click="onModuleDelete(mod.code)"
              :key="'selectedModules[]+'+index + mod.code">
         <v-icon class="mr-2">{{ icons.mdiMinus }}</v-icon>
@@ -27,6 +28,8 @@
 import Vue from 'vue';
 import $ from 'jquery';
 import { mdiPlus, mdiMinus, mdiClose } from '@mdi/js';
+import ModuleIndexLesson from '@/classes/ModuleIndexLesson';
+import Module from '@/classes/Module';
 export default {
   name: 'ModuleControls',
   data: () => ({
@@ -56,7 +59,7 @@ export default {
         if (cols.length !== 7) continue; // Skip Header
         const modIndex = this.parseModIndex(cols[0]);
         if (modIndex !== undefined) currentModIndex = modIndex;
-        const modLesson = {
+        const modLesson = new ModuleIndexLesson({
           type: cols[1].innerText,
           group: cols[2].innerText,
           day: cols[3].innerText,
@@ -64,7 +67,7 @@ export default {
           venue: cols[5].innerText,
           remarks: cols[6].innerText,
           remarkType: this.parseRemarks(cols[6].innerText)
-        };
+        });
         if (currentModIndex !== undefined) {
           if (indexes[currentModIndex] === undefined) { indexes[currentModIndex] = []; }
           indexes[currentModIndex].push(modLesson);
@@ -82,17 +85,10 @@ export default {
       return test[0].innerText;
     },
     parseRemarks (remark) {
-      if (remark.indexOf('Teaching Wk1,3') !== -1) return 1;
-      if (remark.indexOf('Teaching Wk2,4') !== -1) return 2;
-      return 0;
+      return ModuleIndexLesson.parseRemarks(remark);
     },
     parseLessonTime (time) {
-      const times = time.split('-');
-      if (times.length !== 2) return;
-      return {
-        start: times[0],
-        end: times[1]
-      };
+      return ModuleIndexLesson.parseLessonTime(time);
     },
     getModules () {
       const formData = {
@@ -120,7 +116,7 @@ export default {
         const fetchModuleResult = [];
         for (let i = 0; i < tables.length; i += 2) {
           // parse mod name;
-          const modInfo = this.parseModName($(tables[i]));
+          const modInfo = new Module(this.parseModName($(tables[i])));
           modInfo.indexes = this.parseModIndexes($(tables[i + 1]));
           fetchModuleResult.push(modInfo);
         }
@@ -157,9 +153,15 @@ export default {
       return this.fetchModuleResult.length > 0;
     },
     helperText () {
-      if (this.txtModule.length === 0) { return 'Start by entering a course code!'; }
+      if (this.txtModule.length === 0) {
+        if (!this.hasNoModulesSelected) { return 'Enter course code to continue!'; }
+        return 'Start by entering a course code!';
+      }
       if (this.fetchModulePromise === null) { return 'No Modules found!'; }
       return 'Searching NTU database... Please wait';
+    },
+    hasNoModulesSelected () {
+      return Object.keys(this.selectedModules).length === 0;
     }
   }
 };
