@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="d-flex align-center flex-column fill-height">
-    <h1>Plan {{ planIndex+1 }} out of {{ plans.length }}</h1>
+    <h1>Plan {{ selectedIndex }} out of {{ plans.length }}</h1>
     <TimeTableViewer :value="selectedPlan" class="flex d-flex" />
   </v-container>
 
@@ -33,6 +33,10 @@ export default {
     },
     selectedPlan () {
       return this.withData(this.plans[this.planIndex]);
+    },
+    selectedIndex () {
+      if (this.plans.length === 0) return 0;
+      return this.planIndex + 1;
     }
   },
   data () {
@@ -82,7 +86,11 @@ export default {
               if (
                 block1.day !== block2.day ||
                 block1.time.start >= block2.time.end ||
-                block1.time.end <= block2.time.start
+                block1.time.end <= block2.time.start ||
+                (
+                  block1.remarkType !== 0 && block2.remarkType !== 0 &&
+                  block1.remarkType !== block2.remarkType
+                )
               ) continue;
               hasClash = true;
               break;
@@ -111,7 +119,7 @@ export default {
         const courseCode = plan[i].code;
         const indexNumber = plan[i].index;
         const currentCourseIndexTimings = this.selectedModule[courseCode].indexes[indexNumber];
-        plan[i].index = currentCourseIndexTimings;
+        plan[i].timings = currentCourseIndexTimings;
       }
       return plan;
     }
