@@ -13,7 +13,10 @@
         <span>{{ mod.code }} {{mod.name}}</span>
       </v-btn>
     </div>
-    <h3>Selected Modules:</h3>
+    <div class="d-flex justify-space-between flex-row w-100 mt-2">
+      <h3>Selected Modules:</h3>
+      <v-btn @click="onClearAllModule">Clear All</v-btn>
+    </div>
     <h4 v-if="hasNoModulesSelected">No Modules Selected!</h4>
     <div class="d-flex flex-column align-start overflow-auto">
       <v-btn v-for="(mod, index) in selectedModules" class="mt-1" @click="onModuleDelete(mod.code)"
@@ -146,6 +149,12 @@ export default {
       this.$emit('onDelete', this.selectedModules[moduleCode]);
       this.$emit('input', this.selectedModules);
       this.$emit('change', this.selectedModules);
+    },
+    onClearAllModule () {
+      this.selectedModules = {};
+      this.$emit('onClear');
+      this.$emit('input', this.selectedModules);
+      this.$emit('change', this.selectedModules);
     }
   },
   computed: {
@@ -175,5 +184,8 @@ export default {
 }
 .max-h-32{
   max-height: 30vh;
+}
+.w-100{
+  width: 100%;
 }
 </style>
