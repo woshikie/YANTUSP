@@ -1,7 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "110dacefeb0978d897c5",
-    "url": "/YANTUSP/css/app.f9fcdb12.css"
+    "revision": "72dcb8147dbbd4faa629",
+    "url": "/YANTUSP/css/app.d62cc775.css"
   },
   {
     "revision": "b3cf287c31d6137389ad",
@@ -104,12 +104,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/YANTUSP/fonts/Roboto-ThinItalic.8a96edbb.woff"
   },
   {
-    "revision": "e1032f7dcc5fb4c5a62391adcc4c7678",
+    "revision": "6aba653d5e5af13269baa8c3ed34583e",
     "url": "/YANTUSP/index.html"
   },
   {
-    "revision": "110dacefeb0978d897c5",
-    "url": "/YANTUSP/js/app.c6f422b3.js"
+    "revision": "72dcb8147dbbd4faa629",
+    "url": "/YANTUSP/js/app.169cde18.js"
   },
   {
     "revision": "b3cf287c31d6137389ad",

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/YANTUSP/precache-manifest.215694b4ff54882a900a1a3c63471726.js"
+  "/YANTUSP/precache-manifest.6ddbb169e3591b41680ad3149c30751e.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "yantusp"});
