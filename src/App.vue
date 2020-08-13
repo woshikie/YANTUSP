@@ -6,10 +6,10 @@
     <v-main>
       <v-container class="" fluid >
         <v-row align="start" justify="space-between" class=" d-flex flex-row ">
-          <v-col cols="12" md="5" class="flex-shrink-1 flex-grow-0">
+          <v-col cols="12" md="3" class="flex-shrink-1 flex-grow-0">
             <ModuleControls v-model="selectedModules" :current-planned-mods="currentPlan"/>
           </v-col>
-          <v-col cols="12" md="7" class="flex-grow-1 flex-shrink-0">
+          <v-col cols="12" md="9" class="flex-grow-1 flex-shrink-0">
             <TimeTablePicker v-model="selectedModules" @change="onPlanChange" />
           </v-col>
         </v-row>

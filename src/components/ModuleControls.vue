@@ -7,7 +7,7 @@
     <div class="align-start d-flex flex-column overflow-auto max-w-100">
       <h2 v-if="!hasResult">{{ helperText }}</h2>
       <v-btn v-for="(mod, index) in fetchModuleResult" @click="onModuleAdd(mod)"
-             :key="'fetchModuleResult[]+'+index" class="text-no-wrap mt-1">
+             :key="'fetchModuleResult[]+'+index" class="text-wrap mt-1">
         <v-icon class="mr-2">{{ icons.mdiPlus }}</v-icon>
         <span>{{ mod.code }} {{mod.name}}</span>
       </v-btn>
@@ -213,5 +213,12 @@ export default {
 }
 .w-100{
   width: 100%;
+}
+/deep/ .v-btn__content{
+  max-width: 100%;
+}
+/deep/ .v-btn:not(.v-btn--round).v-size--default {
+  height: auto;
+  padding: 0.333em;
 }
 </style>
