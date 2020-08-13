@@ -1,13 +1,13 @@
 <template>
   <v-app>
     <v-app-bar app clipped-left>
-      <v-toolbar-title>Yet Another NTU Stars Planner</v-toolbar-title>
+      <v-toolbar-title>Yet Another NTU Stars Planner for {{ academicYear }} {{ academicSemester }} </v-toolbar-title>
     </v-app-bar>
     <v-main>
       <v-container class="" fluid >
         <v-row align="start" justify="space-between" class=" d-flex flex-row ">
           <v-col cols="12" md="3" class="flex-shrink-1 flex-grow-0">
-            <ModuleControls v-model="selectedModules" :current-planned-mods="currentPlan"/>
+            <ModuleControls v-model="selectedModules" :current-planned-mods="currentPlan" :apiACADSEM="apiACADSEM" />
           </v-col>
           <v-col cols="12" md="9" class="flex-grow-1 flex-shrink-0">
             <TimeTablePicker v-model="selectedModules" @change="onPlanChange" />
@@ -16,7 +16,7 @@
       </v-container>
     </v-main>
     <v-footer app>
-      <span>Made with &hearts; by Wai Gie; &copy; 2020 - {{ new Date().getFullYear() }}</span>
+      <span>Made with &hearts; by Wai Gie; &copy; 2020 - {{ currDate.getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
@@ -30,7 +30,8 @@ export default {
   data () {
     return {
       selectedModules: undefined,
-      currentPlan: undefined
+      currentPlan: undefined,
+      currDate: new Date()
     };
   },
   created () {
@@ -39,6 +40,35 @@ export default {
   methods: {
     onPlanChange (newPlan) {
       this.currentPlan = newPlan;
+    }
+  },
+  computed: {
+    academicYear () {
+      const year = this.currDate.getFullYear();
+      const month = this.currDate.getMonth();
+      if (month >= 5 && month < 11) { // Month >= June && Month < December
+        return `${year}/${year + 1}`;
+      } else { // Month < June || Month == December
+        return `${year - 1}/${year}`;
+      }
+    },
+    academicSemester () {
+      const month = this.currDate.getMonth();
+      if (month >= 5 && month < 11) { // Month >= June && Month < December
+        return 'S1';
+      } else { // Month < June || Month == December
+        return 'S2';
+      }
+      // return 'Semester Not Supported for now!';
+    },
+    apiYear () {
+      return this.academicYear.split('/')[0];
+    },
+    apiSemester () {
+      return this.academicSemester[1];
+    },
+    apiACADSEM () {
+      return `${this.apiYear};${this.apiSemester}`;
     }
   }
 };

@@ -71,7 +71,7 @@ export default {
             switch (test.timeslot.remarkType) {
             case 1: str += ', ODD WEEKS ONLY'; break;
             case 2: str += ', EVEN WEEKS ONLY'; break;
-            default: str += ')';
+            // default: str += ')';
             }
             content.push(str);
             rowSpan = test.colSpan;

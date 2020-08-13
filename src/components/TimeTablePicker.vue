@@ -25,31 +25,28 @@ export default {
   data () {
     return {
       planIndex: 0,
-      icons: { mdiArrowRight, mdiArrowLeft }
+      icons: { mdiArrowRight, mdiArrowLeft },
+      isGenerating: false,
+      plans: []
     };
   },
-  watch: {
-    selectedPlan () {
-      this.$emit('change', this.selectedPlan);
-    }
-  },
   computed: {
+    // plans () {
+    //   return this.generatePlans();
+    // },
     selectedModule: {
       get () { return this.value; },
       set (val) { this.value = val; }
     },
-    plans: {
-      get () {
-        let plans = this.generatePlans();
-        plans = this.filterClashes(plans);
-        return plans;
-      }
-    },
     selectedPlan () {
-      return this.withData(this.plans[this.planIndex]);
+      if (this.isGenerating) return [];
+      const plan = this.withData(this.plans[this.planIndex]);
+      this.bgGeneratePlans();
+      this.$emit('change', plan);
+      return plan;
     },
     selectedIndex () {
-      if (this.plans.length === 0) return 0;
+      if (this.plans === undefined || this.plans.length === 0) return 0;
       return this.planIndex + 1;
     },
     isLeftBtnDisabled () {
@@ -61,12 +58,22 @@ export default {
   },
 
   methods: {
-    generatePlans () {
-      if (this.selectedModule === undefined) return;
+    bgGeneratePlans () {
+      this.isGenerating = true;
       this.planIndex = 0;
+      this.plans = this.generatePlans(this.selectedModule);
+      // this.$worker.run(this.generatePlans, [this.selectedModule]).then((newPlans) => {
+      //   console.log('newPlans', newPlans);
+      //   this.plans = newPlans;
+      //   this.isGenerating = false;
+      // });
+      this.isGenerating = false;
+    },
+    generatePlans (selectedModule) {
+      if (selectedModule === undefined) return;
       let combinations = [];
-      for (const courseCode in this.selectedModule) {
-        const currCourse = this.selectedModule[courseCode];
+      for (const courseCode in selectedModule) {
+        const currCourse = selectedModule[courseCode];
         const currentCombinations = [];
         for (const currCourseIndex in currCourse.indexes) {
           const course = {
@@ -75,6 +82,7 @@ export default {
           };
           if (combinations.length === 0) {
             currentCombinations.push([course]);
+            // temp.push([course]);
           } else {
             for (const combo in combinations) {
               const arr = [
@@ -85,7 +93,8 @@ export default {
             }
           }
         }
-        combinations = currentCombinations;
+        combinations = this.filterClashes(currentCombinations);
+        // combinations = currentCombinations;
       }
       return combinations;
     },

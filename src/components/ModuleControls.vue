@@ -56,7 +56,8 @@ export default {
     currentPlannedMods: {
       type: Array,
       default () { return []; }
-    }
+    },
+    apiACADSEM: String
   },
   data: () => ({
     icons: { mdiPlus, mdiMinus, mdiClose },
@@ -119,7 +120,7 @@ export default {
     getModules () {
       const formData = {
         STAFF_ACCESS: false,
-        ACADSEM: '2020;1',
+        ACADSEM: this.apiACADSEM,
         boption: 'Search',
         r_search_type: 'F',
         r_subj_code: this.txtModule
