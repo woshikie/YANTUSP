@@ -1,6 +1,6 @@
 class TimeTableViewerCell {
   constructor (props = {}) {
-    this.content = undefined;
+    this.content = [];
     this.rowSpan = 1;
     Object.assign(this, props);
   }

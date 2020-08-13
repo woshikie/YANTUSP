@@ -4,12 +4,12 @@
       <v-toolbar-title>Yet Another NTU Stars Planner</v-toolbar-title>
     </v-app-bar>
     <v-main>
-      <v-container class="fill-height" fluid >
-        <v-row align="center" class="fill-height d-flex flex-row justify-space-between">
-          <v-col cols="12" sm="3" class="fill-height">
+      <v-container class="" fluid >
+        <v-row align="start" justify="space-between" class=" d-flex flex-row ">
+          <v-col cols="12" md="5" class="flex-shrink-1 flex-grow-0">
             <ModuleControls v-model="selectedModules" :current-planned-mods="currentPlan"/>
           </v-col>
-          <v-col cols="12" sm="9" class="">
+          <v-col cols="12" md="7" class="flex-grow-1 flex-shrink-0">
             <TimeTablePicker v-model="selectedModules" @change="onPlanChange" />
           </v-col>
         </v-row>

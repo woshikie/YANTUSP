@@ -1,6 +1,6 @@
 <template>
   <v-container fluid >
-    <v-simple-table dense class="flex">
+    <v-simple-table dense class="flex text-center">
       <template v-slot:default>
         <thead>
         <tr>
@@ -11,15 +11,14 @@
         <tr v-for="row_i in 30" :key="'ttv-row-'+row_i">
           <td v-for="(cell, col_i) in getCols(row_i)" :rowspan="cell.rowSpan"
               :key="'ttv-row'+row_i+'-col-'+col_i" >
-            {{ cell.content }}
+            <p v-for="(cellContent, content_i) in cell.content" :key="'ttv-row'+row_i+'-col-'+col_i+'-content-'+content_i">
+              {{ cellContent }}
+            </p>
           </td>
         </tr>
         </tbody>
       </template>
     </v-simple-table>
-<!--    <div class="flex text-center d-flex">-->
-<!--      <span>{{ getContent(col_i, row_i) }}</span>-->
-<!--    </div>-->
   </v-container>
 </template>
 <script>
@@ -56,19 +55,25 @@ export default {
       // if (y === 1) return this.getHeaders(x);
       if (x === 1) {
         return new TimeTableViewerCell({
-          content: this.getHours(y)
+          content: [this.getHours(y)]
         });
       }
       // return `(${x}, ${y})`;
       const moduleHits = this.getModule(x, y);
       let retObj;
       if (moduleHits.length > 0) {
-        let content = '';
+        const content = [];
         let rowSpan = 1;
         for (const hit in moduleHits) {
           const test = moduleHits[hit];
           if (test.isStart) {
-            content += `(${test.modCode}, ${test.timeslot.type})`;
+            let str = `${test.modCode}, ${test.timeslot.type}`;
+            switch (test.timeslot.remarkType) {
+            case 1: str += ', ODD WEEKS ONLY'; break;
+            case 2: str += ', EVEN WEEKS ONLY'; break;
+            default: str += ')';
+            }
+            content.push(str);
             rowSpan = test.colSpan;
             retObj = new TimeTableViewerCell({
               content: content,
