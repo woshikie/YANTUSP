@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "992dd784e09748e4b17a",
-    "url": "/YANTUSP/css/app.4acdf29d.css"
+    "revision": "a2679f1d7044bfeb20f1",
+    "url": "/YANTUSP/css/app.8e1ac252.css"
   },
   {
-    "revision": "b3cf287c31d6137389ad",
+    "revision": "40080f11afff7804f046",
     "url": "/YANTUSP/css/chunk-vendors.64d64091.css"
   },
   {
@@ -104,16 +104,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/YANTUSP/fonts/Roboto-ThinItalic.8a96edbb.woff"
   },
   {
-    "revision": "cb4c029feaddb7d9a76690e4a9b71a97",
+    "revision": "b52ca9443dd4e7c6289e7befa12ae213",
     "url": "/YANTUSP/index.html"
   },
   {
-    "revision": "992dd784e09748e4b17a",
-    "url": "/YANTUSP/js/app.416ebc11.js"
+    "revision": "a2679f1d7044bfeb20f1",
+    "url": "/YANTUSP/js/app.b17853e6.js"
   },
   {
-    "revision": "b3cf287c31d6137389ad",
-    "url": "/YANTUSP/js/chunk-vendors.18d3271e.js"
+    "revision": "40080f11afff7804f046",
+    "url": "/YANTUSP/js/chunk-vendors.d23dbda4.js"
   },
   {
     "revision": "83d7de03c60cfc098496c3c54eaed520",
