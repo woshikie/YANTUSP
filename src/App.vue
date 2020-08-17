@@ -71,18 +71,16 @@ export default {
     },
     apiACADSEM () {
       return `${this.apiYear};${this.apiSemester}`;
-    },
-    metaInfo () {
-      return {
-        title: 'YANTUSP',
-        meta: [
-          { name: 'description', description: 'Yet Another NTU Stars Planner' },
-          { property: 'og:site_name', content: 'Yet Another NTU Stars Planner' },
-          { property: 'og:type', content: 'website' },
-          { name: 'robots', content: 'index,follow' }
-        ]
-      };
     }
+  },
+  metaInfo: {
+    title: 'YANTUSP',
+    meta: [
+      { name: 'description', description: 'Yet Another NTU Stars Planner' },
+      { property: 'og:site_name', content: 'Yet Another NTU Stars Planner' },
+      { property: 'og:type', content: 'website' },
+      { name: 'robots', content: 'index,follow' }
+    ]
   }
 };
 </script>
