@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "29a1c2ae2eafd71eb6d0",
+    "revision": "ffb2ca021e93eb4fab74",
     "url": "/YANTUSP/css/app.8e1ac252.css"
   },
   {
@@ -108,12 +108,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/YANTUSP/googlee82b94b2a5576923.html"
   },
   {
-    "revision": "e218d3272e2fada99cdc9a92577ab08e",
+    "revision": "bdf5fc44c9dc3c1f79ac1b5de45c14b2",
     "url": "/YANTUSP/index.html"
   },
   {
-    "revision": "29a1c2ae2eafd71eb6d0",
-    "url": "/YANTUSP/js/app.a30c1cdd.js"
+    "revision": "ffb2ca021e93eb4fab74",
+    "url": "/YANTUSP/js/app.9d97a8fd.js"
   },
   {
     "revision": "ea6d19b0bca8eaf84c0c",
