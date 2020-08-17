@@ -104,6 +104,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/YANTUSP/fonts/Roboto-ThinItalic.8a96edbb.woff"
   },
   {
+    "revision": "214777dae3fa6d3925b94deb7162c6f7",
+    "url": "/YANTUSP/googlee82b94b2a5576923.html"
+  },
+  {
     "revision": "b52ca9443dd4e7c6289e7befa12ae213",
     "url": "/YANTUSP/index.html"
   },
