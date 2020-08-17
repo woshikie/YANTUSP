@@ -16,7 +16,9 @@
       </v-container>
     </v-main>
     <v-footer app>
-      <span>Made with &hearts; by Wai Gie; &copy; 2020 - {{ currDate.getFullYear() }}</span>
+      <span class="mr-4">Made with &hearts; by Wai Gie; &copy; 2020 - {{ currDate.getFullYear() }};</span>
+      <v-btn color="primary" class="mr-4" rounded href="https://github.com/woshikie/YANTUSP">Source</v-btn>
+      <v-btn color="Accent" rounded href="https://www.buymeacoffee.com/kiethkok">Buy me a ☕</v-btn>
     </v-footer>
   </v-app>
 </template>
@@ -69,6 +71,17 @@ export default {
     },
     apiACADSEM () {
       return `${this.apiYear};${this.apiSemester}`;
+    },
+    metaInfo () {
+      return {
+        title: 'YANTUSP',
+        meta: [
+          { name: 'description', description: 'Yet Another NTU Stars Planner' },
+          { property: 'og:site_name', content: 'Yet Another NTU Stars Planner' },
+          { property: 'og:type', content: 'website' },
+          { name: 'robots', content: 'index,follow' }
+        ]
+      };
     }
   }
 };
